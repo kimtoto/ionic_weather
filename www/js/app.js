@@ -57,7 +57,7 @@ var app = angular.module('App', ['ionic']);
      * @type {Object}
      * @description Locations services
      */
-    app.factory('Locations', function () {
+    app.factory('Locations', function ($ionicPopup) {
         var Locations = {
           data: [{
             city: 'Chicago, IL, USA',
@@ -76,9 +76,20 @@ var app = angular.module('App', ['ionic']);
           toggle: function (item) {
               var index = Locations.getIndex(item);
               if (index >= 0) {
-                  Locations.data.splice(index, 1);
+                  $ionicPopup.confirm({
+                    title: 'confirm',
+                    template: Locations.data[index].city + "Delete"
+                  })
+                  .then(function (res) {
+                      if (res) {
+                        Locations.data.splice(index, 1);
+                      }
+                  });
               } else {
                   Locations.data.push(item);
+                  $ionicPopup.alert({
+                    title: 'Location Saved'
+                  });
               }
           },
           primary: function (item) {
