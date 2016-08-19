@@ -18,7 +18,7 @@ var app = angular.module('App', ['ionic']);
             });
 
         $urlRouterProvider.otherwise('/search');
-    });
+      });
 
     app.run(function($ionicPlatform) {
         $ionicPlatform.ready(function() {
@@ -58,6 +58,9 @@ var app = angular.module('App', ['ionic']);
      * @description Locations services
      */
     app.factory('Locations', function ($ionicPopup) {
+        function store () {
+            localStorage.setItem('locations', angular.toJson(Locations.data));
+        };
         var Locations = {
           data: [{
             city: 'Chicago, IL, USA',
@@ -91,6 +94,7 @@ var app = angular.module('App', ['ionic']);
                     title: 'Location Saved'
                   });
               }
+              store(); //목록 내 지역이 토글링 된 후에 메소드 호출
           },
           primary: function (item) {
               var index = Locations.getIndex(item);
@@ -100,8 +104,18 @@ var app = angular.module('App', ['ionic']);
               } else {
                   Locations.data.unshift(item);
               }
+              store();
           }
         };
+
+        try {
+          var items = angular.fromJson(localStorage.getItem('locations')) || [];
+          Locations.data = items;
+          console.log('내부 데이터 존재');
+        } catch (e) {
+          Locations.data = [];
+          console.log('내부 데이터 존재 하지 않음');
+        }
 
         return Locations;
     });
