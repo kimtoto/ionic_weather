@@ -16,7 +16,10 @@ var app = angular.module('App');
         })
         .then(function() {
           $ionicLoading.hide();
-        });
+        })
+        .error(function(err) {
+          console.log(err);
+        })
 
         var barHeight = document.getElementsByTagName('ion-header-bar')[0].clientHeight;
 
